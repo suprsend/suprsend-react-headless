@@ -9,7 +9,7 @@ export interface IConfigStore {
   pollingInterval: number
 }
 
-const configStore = create<IConfigStore>(() => ({
+const useConfigStore = create<IConfigStore>(() => ({
   workspaceKey: '',
   workspaceSecret: '',
   distinctId: '',
@@ -18,4 +18,4 @@ const configStore = create<IConfigStore>(() => ({
   pollingInterval: 20 * 1000
 }))
 
-export default configStore
+export default useConfigStore
