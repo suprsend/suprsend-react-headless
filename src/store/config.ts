@@ -1,20 +1,12 @@
 import create from 'zustand'
-
-export interface IConfigStore {
-  workspaceKey: string
-  workspaceSecret: string
-  distinctId: string
-  subscriberId: string
-  apiUrl: string
-  pollingInterval: number
-}
+import { IConfigStore } from '../types'
 
 const useConfigStore = create<IConfigStore>(() => ({
   workspaceKey: '',
   workspaceSecret: '',
   distinctId: '',
   subscriberId: '',
-  apiUrl: 'https://hub.suprsend.com',
+  apiUrl: 'https://collector-staging.suprsend.workers.dev',
   pollingInterval: 20 * 1000
 }))
 

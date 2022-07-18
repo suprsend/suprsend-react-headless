@@ -1,10 +1,5 @@
-import * as React from 'react'
-import styles from './styles.module.css'
-
-interface Props {
-  text: string
-}
-
-export const ExampleComponent = ({ text }: Props) => {
-  return <div className={styles.test}>Example Component: {text}</div>
-}
+export { default as SuprSendProvider } from './main/SuprSendProvider'
+export { default as useNotifications } from './main/useNotifications'
+export { default as useNotification } from './main/useNotification'
+export { default as useBell } from './main/useBell'
+export * from './types/index'

@@ -5,13 +5,14 @@ interface IRemoteNotificationMessage {
   url: string
 }
 
-interface IRemoteNotification {
+export interface IRemoteNotification {
   n_id: string
   n_category: string
   created_on: number
+  seen_on?: number
   message: IRemoteNotificationMessage
 }
 
-interface INotification extends IRemoteNotification {}
-
-export default INotification
+export interface INotification extends IRemoteNotification {
+  markClicked: () => void
+}

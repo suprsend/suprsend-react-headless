@@ -1,5 +1,6 @@
 import React from 'react'
 import { useConfigStore } from '../store'
+import { IConfigStore } from '../types'
 
 interface ISuprSendProviderProps {
   workspaceKey: string
@@ -16,14 +17,16 @@ function SuprSendProvider({
   distinctId,
   subscriberId
 }: ISuprSendProviderProps): JSX.Element {
-  useConfigStore((store) => ({
+  // set config
+  useConfigStore.setState((store: IConfigStore) => ({
     ...store,
-    workspaceKey: workspaceKey,
-    workspaceSecret: workspaceSecret,
-    distinctId: distinctId,
-    subscriberId: subscriberId
+    workspaceKey,
+    workspaceSecret,
+    distinctId,
+    subscriberId
   }))
-  return <>{children}</>
+
+  return <React.Fragment>{children}</React.Fragment>
 }
 
 export default SuprSendProvider
