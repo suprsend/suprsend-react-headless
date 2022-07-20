@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import crypto from 'crypto-js'
 
 export function utcNow() {
   return new Date().toUTCString()
@@ -21,23 +22,27 @@ export function uuid() {
   return uuid
 }
 
-export function createSignature({
-  workspaceSecret,
-  date,
-  method,
-  body,
-  route,
-  contentType
-}: {
+interface ISignature {
   workspaceSecret: string
   date: string
   method: string
-  body?: string
   route: string
+  body?: string
   contentType?: string
-}) {
-  console.log(workspaceSecret, date, method, route, body, contentType)
-  return ''
+}
+
+export function createSignature({
+  workspaceSecret,
+  route,
+  body = '',
+  method,
+  contentType = '',
+  date
+}: ISignature) {
+  const md5 = body ? crypto.MD5(body).toString() : ''
+  const message = `${method}\n${md5}\n${contentType}\n${date}\n${route}`
+  const hmac = crypto.HmacSHA256(message, workspaceSecret)
+  return crypto.enc.Base64.stringify(hmac)
 }
 
 export async function setStorage(key: string, value: object) {

@@ -30,6 +30,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "@types/crypto-js": "^4.1.1",
     "@types/jest": "^25.1.4",
     "@types/node": "^12.12.38",
     "@types/react": "^16.9.27",
@@ -62,6 +63,7 @@
   ],
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.7",
+    "crypto-js": "^4.1.1",
     "zustand": "^4.0.0-rc.1"
   }
 }

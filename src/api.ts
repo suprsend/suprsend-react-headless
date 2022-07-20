@@ -1,12 +1,12 @@
 import { utcNow, uuid, epochNow, createSignature } from './utils'
 import { useConfigStore } from './store'
 
-export async function getNotifications(after: number) {
+export function getNotifications(after: number) {
   const { apiUrl, workspaceKey, workspaceSecret, subscriberId, distinctId } =
     useConfigStore.getState()
   const date = utcNow()
   const route = `/inbox/fetch/?subscriber_id=${subscriberId}&after=${after}&distinct_id=${distinctId}`
-  const signature = await createSignature({
+  const signature = createSignature({
     workspaceSecret,
     date,
     method: 'GET',
@@ -40,7 +40,7 @@ export function markNotificationClicked(id: string) {
   })
 }
 
-export async function markBellClicked() {
+export function markBellClicked() {
   const { apiUrl, workspaceKey, workspaceSecret, subscriberId, distinctId } =
     useConfigStore.getState()
   const date = utcNow()
@@ -50,7 +50,7 @@ export async function markBellClicked() {
     distinct_id: distinctId,
     subscriber_id: subscriberId
   })
-  const signature = await createSignature({
+  const signature = createSignature({
     workspaceSecret,
     date,
     route,
@@ -58,7 +58,7 @@ export async function markBellClicked() {
     contentType: 'application/json',
     body
   })
-  return window.fetch(`${apiUrl}${route}`, {
+  return fetch(`${apiUrl}${route}`, {
     method: 'POST',
     body,
     headers: {

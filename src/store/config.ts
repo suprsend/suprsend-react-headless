@@ -7,7 +7,8 @@ const useConfigStore = create<IConfigStore>(() => ({
   distinctId: '',
   subscriberId: '',
   apiUrl: 'https://collector-staging.suprsend.workers.dev',
-  pollingInterval: 20 * 1000
+  pollingInterval: 20 * 1000,
+  batchSize: 20
 }))
 
 export default useConfigStore
