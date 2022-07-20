@@ -40,7 +40,12 @@ function NotificationList() {
         {unSeenCount}
       </p>
       {notifications.map((notification: IRemoteNotification) => {
-        return <NotificationItem notification={notification} />
+        return (
+          <NotificationItem
+            notification={notification}
+            key={notification.n_id}
+          />
+        )
       })}
     </div>
   )

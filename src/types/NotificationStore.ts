@@ -1,4 +1,4 @@
-import IRemoteNotification from './Notification'
+import { IRemoteNotification } from './Notification'
 
 export default interface INotificationStore {
   notifications: IRemoteNotification[]

@@ -6,6 +6,12 @@ import {
   markNotificationClicked,
   markBellClicked
 } from '../api'
+import { getStorageKey, setStorage } from '../utils'
+
+interface IInternalStorage {
+  notifications: IRemoteNotification[]
+  subscriberId: string
+}
 
 const useNotificationStore = create<INotificationStore>()((set, get) => ({
   notifications: [],
@@ -13,7 +19,7 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
   lastFetchedOn: null,
 
   fetchNotifications: async () => {
-    const pollingInterval = useConfigStore.getState().pollingInterval
+    const config = useConfigStore.getState()
     const thisStore = get()
     const currentFetchingOn = Date.now()
     const lastFetchedOn =
@@ -22,11 +28,19 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
     try {
       const response = await getNotifications(lastFetchedOn)
       const data = await response.json()
+      const newNotifications = [...data.results, ...thisStore.notifications]
       set(() => ({
-        notifications: [...thisStore.notifications, ...data.results],
+        notifications: newNotifications,
         unSeenCount: thisStore.unSeenCount + data.unread,
         lastFetchedOn: currentFetchingOn
       }))
+      // set in client storage
+      const storageKey = getStorageKey(config.workspaceKey)
+      const storageData: IInternalStorage = {
+        notifications: newNotifications.slice(0, config.batchSize),
+        subscriberId: config.subscriberId
+      }
+      setStorage(storageKey, storageData)
     } catch (e) {
       console.log('Error Getting Notificatons API')
     }
@@ -34,7 +48,7 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
     // polling
     setTimeout(() => {
       thisStore.fetchNotifications()
-    }, pollingInterval)
+    }, config.pollingInterval)
   },
 
   markClicked: (id: string) => {
