@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useConfigStore, useNotificationStore } from '../store'
-import { getStorageKey, getStorage } from '../utils'
+import { getClientNotificationStorage } from '../utils'
 
 interface ISuprSendProviderProps {
   workspaceKey: string
@@ -17,10 +17,8 @@ function SuprSendProvider({
   distinctId,
   subscriberId
 }: ISuprSendProviderProps): JSX.Element {
-  const storageKey = getStorageKey(workspaceKey)
-
   async function handleSubscriberChange() {
-    const storedData = (await getStorage(storageKey)) || {}
+    let storedData = await getClientNotificationStorage(workspaceKey)
     if (storedData.subscriberId === subscriberId) {
       useNotificationStore.setState(() => ({
         notifications: storedData.notifications,

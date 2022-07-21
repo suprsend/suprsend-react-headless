@@ -1,5 +1,5 @@
 import { utcNow, uuid, epochNow, createSignature } from './utils'
-import { useConfigStore } from './store'
+import useConfigStore from './store/config'
 
 export function getNotifications(after: number) {
   const { apiUrl, workspaceKey, workspaceSecret, subscriberId, distinctId } =

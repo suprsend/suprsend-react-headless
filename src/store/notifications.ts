@@ -1,12 +1,12 @@
 import create from 'zustand'
-import { useConfigStore } from '../store'
+import useConfigStore from './config'
 import { INotificationStore, IRemoteNotification } from '../types'
 import {
   getNotifications,
   markNotificationClicked,
   markBellClicked
 } from '../api'
-import { getStorageKey, setStorage } from '../utils'
+import { setClientNotificationStorage } from '../utils'
 
 interface IInternalStorage {
   notifications: IRemoteNotification[]
@@ -38,12 +38,11 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
         lastFetchedOn: currentFetchingOn
       }))
       // set in client storage
-      const storageKey = getStorageKey(config.workspaceKey)
       const storageData: IInternalStorage = {
         notifications: newNotifications.slice(0, config.batchSize),
         subscriberId: config.subscriberId
       }
-      setStorage(storageKey, storageData)
+      setClientNotificationStorage(storageData)
     } catch (e) {
       console.log('Error Getting Notificatons API')
     }
@@ -65,11 +64,18 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
     const clickedNotification = notifications.find(
       (item: IRemoteNotification) => item.n_id === id
     )
-    if (!clickedNotification) return
-    if (!clickedNotification.seen_on) {
+    if (clickedNotification && !clickedNotification.seen_on) {
       markNotificationClicked(id)
       clickedNotification.seen_on = Date.now()
       set((store: INotificationStore) => ({ ...store }))
+
+      // set in client storage
+      const config = useConfigStore.getState()
+      const storageData: IInternalStorage = {
+        notifications: notifications.slice(0, config.batchSize),
+        subscriberId: config.subscriberId
+      }
+      setClientNotificationStorage(storageData)
     }
   },
 

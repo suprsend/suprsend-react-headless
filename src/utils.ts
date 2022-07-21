@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import crypto from 'crypto-js'
+import useConfigStore from './store/config'
 
 export function utcNow() {
   return new Date().toUTCString()
@@ -45,10 +46,9 @@ export function createSignature({
   return crypto.enc.Base64.stringify(hmac)
 }
 
-export async function setStorage(key: string, value: object) {
+export async function setStorage(key: string, value: string) {
   try {
-    const jsonValue = JSON.stringify(value)
-    await AsyncStorage.setItem(key, jsonValue)
+    await AsyncStorage.setItem(key, value)
   } catch (e) {
     console.log('Error setting in storage')
   }
@@ -57,8 +57,7 @@ export async function setStorage(key: string, value: object) {
 export async function getStorage(key: string) {
   let value
   try {
-    const stringValue: string | null = await AsyncStorage.getItem(key)
-    value = stringValue ? JSON.parse(stringValue) : null
+    value = await AsyncStorage.getItem(key)
   } catch (e) {
     console.log('Error getting in storage')
   }
@@ -71,4 +70,20 @@ export function getStorageKey(key: string) {
     newStr += key[i].toLowerCase()
   }
   return `_suprsend_inbox_${newStr}`
+}
+
+export async function getClientNotificationStorage(workspaceKey?: string) {
+  const currentWorkspaceKey =
+    workspaceKey || useConfigStore.getState().workspaceKey
+  const storageKey = getStorageKey(currentWorkspaceKey)
+  const value = await getStorage(storageKey)
+  const jsonValue = value ? JSON.parse(value) : {}
+  return jsonValue
+}
+
+export async function setClientNotificationStorage(value: object) {
+  const workspaceKey = useConfigStore.getState().workspaceKey
+  const storageKey = getStorageKey(workspaceKey)
+  const jsonValue = JSON.stringify(value)
+  await setStorage(storageKey, jsonValue)
 }
