@@ -4,28 +4,41 @@ import {
   useNotifications,
   useNotification,
   IRemoteNotification
-  // useBell
 } from 'suprsend-react-headless'
 
+const data = [
+  { sid: '', did: '' },
+  {
+    did: 'katta.sivaram@suprsend.com',
+    sid: 'zcBZpqtxN5W5fAyaJ1QXEnzmLvDThfBLvqg8B7sOt0Y'
+  },
+  {
+    did: 'skme902902@gmail.com',
+    sid: '2t8r9WtUZhK8G97Kb0Bb96rr1PkJdmZQyrnLnfcVE4w'
+  }
+]
+
 const App = () => {
+  const [user, setUser] = React.useState(data[0])
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setUser(data[1])
+    }, 5000)
+  }, [])
+
   return (
     <SuprSendProvider
       workspaceKey='kfWdrPL1nFqs7OUihiBn'
       workspaceSecret='From1HA1ZiSXs3ofBHXh'
-      subscriberId='2t8r9WtUZhK8G97Kb0Bb96rr1PkJdmZQyrnLnfcVE4w'
-      distinctId='skme902902@gmail.com'
+      subscriberId={user.sid}
+      distinctId={user.did}
     >
       <h3>Notifications</h3>
-      {/* <UnseenCount /> */}
       <NotificationList />
     </SuprSendProvider>
   )
 }
-
-// function UnseenCount() {
-//   const { unSeenCount } = useBell()
-//   return <p>UnSeen: {unSeenCount}</p>
-// }
 
 function NotificationList() {
   const { notifications, unSeenCount, markAllSeen } = useNotifications()

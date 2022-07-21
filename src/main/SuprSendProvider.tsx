@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useConfigStore, useNotificationStore } from '../store'
-import { IConfigStore, INotificationStore } from '../types'
 import { getStorageKey, getStorage } from '../utils'
 
 interface ISuprSendProviderProps {
@@ -20,28 +19,32 @@ function SuprSendProvider({
 }: ISuprSendProviderProps): JSX.Element {
   const storageKey = getStorageKey(workspaceKey)
 
-  // set config
-  useConfigStore.setState((store: IConfigStore) => ({
-    ...store,
-    workspaceKey,
-    workspaceSecret,
-    distinctId,
-    subscriberId
-  }))
-
-  async function handleData() {
-    const storedData = await getStorage(storageKey)
-    if (!storedData) return
+  async function handleSubscriberChange() {
+    const storedData = (await getStorage(storageKey)) || {}
     if (storedData.subscriberId === subscriberId) {
-      useNotificationStore.setState((store: INotificationStore) => ({
-        ...store,
-        notifications: storedData.notifications
+      useNotificationStore.setState(() => ({
+        notifications: storedData.notifications,
+        lastFetchedOn: null
+      }))
+    } else {
+      useNotificationStore.setState(() => ({
+        notifications: [],
+        lastFetchedOn: null
       }))
     }
+    useConfigStore.setState(() => ({
+      workspaceKey,
+      workspaceSecret,
+      distinctId,
+      subscriberId
+    }))
   }
 
   useEffect(() => {
-    handleData()
+    handleSubscriberChange()
+    return () => {
+      useNotificationStore.getState().clearPolling()
+    }
   }, [subscriberId])
 
   return <React.Fragment>{children}</React.Fragment>

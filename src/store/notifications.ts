@@ -21,6 +21,7 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
   fetchNotifications: async () => {
     const config = useConfigStore.getState()
     const thisStore = get()
+    const isFirstCall = !thisStore.lastFetchedOn
     const currentFetchingOn = Date.now()
     const lastFetchedOn =
       thisStore.lastFetchedOn || currentFetchingOn - 30 * 24 * 60 * 60 * 1000
@@ -28,7 +29,9 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
     try {
       const response = await getNotifications(lastFetchedOn)
       const data = await response.json()
-      const newNotifications = [...data.results, ...thisStore.notifications]
+      const newNotifications = isFirstCall
+        ? [...data.results]
+        : [...data.results, ...thisStore.notifications]
       set(() => ({
         notifications: newNotifications,
         unSeenCount: thisStore.unSeenCount + data.unread,
@@ -46,9 +49,15 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
     }
 
     // polling
-    setTimeout(() => {
+    const timerId: ReturnType<typeof setTimeout> = setTimeout(() => {
       thisStore.fetchNotifications()
     }, config.pollingInterval)
+    set(() => ({ pollingTimerId: timerId }))
+  },
+
+  clearPolling: () => {
+    const pollingTimerId = get().pollingTimerId
+    clearTimeout(pollingTimerId)
   },
 
   markClicked: (id: string) => {

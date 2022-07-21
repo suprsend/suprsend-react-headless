@@ -1,15 +1,18 @@
 import { useEffect } from 'react'
-import { useNotificationStore } from '../store'
-import { INotificationStore } from '../types'
+import { useNotificationStore, useConfigStore } from '../store'
+import { IConfigStore, INotificationStore } from '../types'
 
 export default function useNotifications() {
   const store = useNotificationStore((store: INotificationStore) => store)
+  const subscriberId = useConfigStore(
+    (store: IConfigStore) => store.subscriberId
+  )
 
   useEffect(() => {
-    if (!store.lastFetchedOn) {
+    if (subscriberId && !store.lastFetchedOn) {
       store.fetchNotifications()
     }
-  }, [])
+  }, [subscriberId])
 
   return {
     notifications: store.notifications,
