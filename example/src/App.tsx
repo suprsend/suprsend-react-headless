@@ -3,6 +3,7 @@ import {
   SuprSendProvider,
   useNotifications,
   useNotification,
+  useEvent,
   IRemoteNotification
 } from 'suprsend-react-headless'
 
@@ -50,6 +51,9 @@ const App = () => {
 }
 
 function Home() {
+  useEvent('new_notification', (data) => {
+    console.log('NEW NOTIFICATION EVENT', data)
+  })
   return <h1>Home</h1>
 }
 

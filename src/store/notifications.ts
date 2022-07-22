@@ -7,6 +7,7 @@ import {
   markBellClicked
 } from '../api'
 import { setClientNotificationStorage } from '../utils'
+import { suprSendEmitter } from '../main/useEvent'
 
 interface IInternalStorage {
   notifications: IRemoteNotification[]
@@ -37,6 +38,12 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
         unSeenCount: thisStore.unSeenCount + data.unread,
         lastFetchedOn: currentFetchingOn
       }))
+
+      // emit new notification event
+      if (!isFirstCall && data.results.length > 0) {
+        suprSendEmitter.emit('new_notification', data.results)
+      }
+
       // set in client storage
       const storageData: IInternalStorage = {
         notifications: newNotifications.slice(0, config.batchSize),
@@ -44,7 +51,7 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
       }
       setClientNotificationStorage(storageData)
     } catch (e) {
-      console.log('Error Getting Notificatons API')
+      console.log('SUPRSEND: error while getting notifications', e)
     }
 
     // polling

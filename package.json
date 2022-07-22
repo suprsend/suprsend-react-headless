@@ -64,6 +64,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.7",
     "crypto-js": "^4.1.1",
+    "mitt": "^3.0.0",
     "zustand": "^4.0.0-rc.1"
   }
 }

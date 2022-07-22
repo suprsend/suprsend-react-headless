@@ -34,6 +34,12 @@ async function handleSubscriberChange(
     distinctId,
     subscriberId
   }))
+
+  // start polling
+  const store = useNotificationStore.getState()
+  if (subscriberId && !store.lastFetchedOn) {
+    store.fetchNotifications()
+  }
 }
 
 function SuprSendProvider({
