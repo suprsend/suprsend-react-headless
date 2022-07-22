@@ -56,6 +56,7 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
 
   clearPolling: () => {
     const pollingTimerId = get().pollingTimerId
+    set({ lastFetchedOn: null })
     clearTimeout(pollingTimerId)
   },
 

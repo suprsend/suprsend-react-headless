@@ -12,6 +12,9 @@ export default function useNotifications() {
     if (subscriberId && !store.lastFetchedOn) {
       store.fetchNotifications()
     }
+    return () => {
+      store.clearPolling()
+    }
   }, [subscriberId])
 
   return {

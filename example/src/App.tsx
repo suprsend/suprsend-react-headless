@@ -20,6 +20,7 @@ const data = [
 
 const App = () => {
   const [user, setUser] = React.useState(data[0])
+  const [page, setPage] = React.useState('home')
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -34,24 +35,30 @@ const App = () => {
       subscriberId={user.sid}
       distinctId={user.did}
     >
-      <h3>Notifications</h3>
-      <NotificationList />
+      <button
+        onClick={() => {
+          setPage((prev) => {
+            return prev === 'home' ? 'notifications' : 'home'
+          })
+        }}
+      >
+        Click
+      </button>
+      {page === 'home' ? <Home /> : <Notifications />}
     </SuprSendProvider>
   )
 }
 
-function NotificationList() {
-  const { notifications, unSeenCount, markAllSeen } = useNotifications()
+function Home() {
+  return <h1>Home</h1>
+}
+
+function Notifications() {
+  const { notifications } = useNotifications()
 
   return (
     <div>
-      <p
-        onClick={() => {
-          markAllSeen()
-        }}
-      >
-        {unSeenCount}
-      </p>
+      <h3>Notifications</h3>
       {notifications.map((notification: IRemoteNotification) => {
         return (
           <NotificationItem
