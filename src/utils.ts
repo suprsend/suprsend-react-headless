@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import crypto from 'crypto-js'
-import useConfigStore from './store/config'
+import { useConfigStore } from './store'
 
 export function utcNow() {
   return new Date().toUTCString()

@@ -1,5 +1,5 @@
 import create from 'zustand'
-import useConfigStore from './config'
+import { useConfigStore } from '../store'
 import { INotificationStore, IRemoteNotification } from '../types'
 import {
   getNotifications,
