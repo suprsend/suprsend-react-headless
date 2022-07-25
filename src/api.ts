@@ -1,18 +1,19 @@
 import { utcNow, uuid, epochNow, createSignature } from './utils'
 import { useConfigStore } from './store'
 
-export function getNotifications(after: number) {
+export function getNotifications(after: number, before?: number) {
   const { apiUrl, workspaceKey, workspaceSecret, subscriberId, distinctId } =
     useConfigStore.getState()
   const date = utcNow()
   const route = `/inbox/fetch/?subscriber_id=${subscriberId}&after=${after}&distinct_id=${distinctId}`
+  const fullRoute = before ? `${route}&before=${before}` : route
   const signature = createSignature({
     workspaceSecret,
     date,
     method: 'GET',
-    route
+    route: fullRoute
   })
-  return fetch(`${apiUrl}${route}`, {
+  return fetch(`${apiUrl}${fullRoute}`, {
     method: 'GET',
     headers: {
       Authorization: `${workspaceKey}:${signature}`,

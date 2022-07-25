@@ -18,17 +18,18 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
   notifications: [],
   unSeenCount: 0,
   lastFetchedOn: null,
+  firstFetchedOn: null,
 
   fetchNotifications: async () => {
     const config = useConfigStore.getState()
     const thisStore = get()
     const isFirstCall = !thisStore.lastFetchedOn
-    const currentFetchingOn = Date.now()
-    const lastFetchedOn =
-      thisStore.lastFetchedOn || currentFetchingOn - 30 * 24 * 60 * 60 * 1000
+    const currentTimeStamp = Date.now()
+    const prevMonthTimeStamp = currentTimeStamp - config.batchTimeInterval
+    const currentFetchFrom = thisStore.lastFetchedOn || prevMonthTimeStamp
 
     try {
-      const response = await getNotifications(lastFetchedOn)
+      const response = await getNotifications(currentFetchFrom)
       const data = await response.json()
       const newNotifications = isFirstCall
         ? [...data.results]
@@ -36,7 +37,10 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
       set(() => ({
         notifications: newNotifications,
         unSeenCount: thisStore.unSeenCount + data.unread,
-        lastFetchedOn: currentFetchingOn
+        lastFetchedOn: currentTimeStamp,
+        firstFetchedOn: isFirstCall
+          ? prevMonthTimeStamp
+          : thisStore.firstFetchedOn
       }))
 
       // emit new notification event
@@ -61,9 +65,30 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
     set(() => ({ pollingTimerId: timerId }))
   },
 
+  fetchPrevious: async () => {
+    const config = useConfigStore.getState()
+    const thisStore = get()
+    const currentTimeStamp = Date.now()
+    const lastFetchedOn = thisStore.firstFetchedOn || currentTimeStamp
+    const fetchFrom = lastFetchedOn
+      ? lastFetchedOn - config.batchTimeInterval
+      : currentTimeStamp //get last month time stamp
+    try {
+      const response = await getNotifications(fetchFrom, lastFetchedOn)
+      const data = await response.json()
+      const newNotifications = [...thisStore.notifications, ...data.results]
+      set(() => ({
+        notifications: newNotifications,
+        firstFetchedOn: fetchFrom
+      }))
+    } catch (e) {
+      console.log('SUPRSEND: error while getting notifications', e)
+    }
+  },
+
   clearPolling: () => {
     const pollingTimerId = get().pollingTimerId
-    set({ lastFetchedOn: null })
+    set({ lastFetchedOn: null, firstFetchedOn: null })
     clearTimeout(pollingTimerId)
   },
 

@@ -20,12 +20,14 @@ async function handleSubscriberChange(
   if (storedData.subscriberId === subscriberId) {
     useNotificationStore.setState(() => ({
       notifications: storedData.notifications,
-      lastFetchedOn: null
+      lastFetchedOn: null,
+      firstFetchedOn: null
     }))
   } else {
     useNotificationStore.setState(() => ({
       notifications: [],
-      lastFetchedOn: null
+      lastFetchedOn: null,
+      firstFetchedOn: null
     }))
   }
   useConfigStore.setState(() => ({
