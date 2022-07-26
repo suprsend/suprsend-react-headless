@@ -3,58 +3,20 @@ import {
   SuprSendProvider,
   useNotifications,
   useNotification,
-  useEvent,
   IRemoteNotification
 } from 'suprsend-react-headless'
 
-const data = [
-  { sid: '', did: '' },
-  {
-    did: 'katta.sivaram@suprsend.com',
-    sid: 'zcBZpqtxN5W5fAyaJ1QXEnzmLvDThfBLvqg8B7sOt0Y'
-  },
-  {
-    did: 'skme902902@gmail.com',
-    sid: '2t8r9WtUZhK8G97Kb0Bb96rr1PkJdmZQyrnLnfcVE4w'
-  }
-]
-
 const App = () => {
-  const [user, setUser] = React.useState(data[0])
-  const [page, setPage] = React.useState('home')
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      setUser(data[1])
-    }, 5000)
-  }, [])
-
   return (
     <SuprSendProvider
-      workspaceKey='kfWdrPL1nFqs7OUihiBn'
-      workspaceSecret='From1HA1ZiSXs3ofBHXh'
-      subscriberId={user.sid}
-      distinctId={user.did}
+      workspaceKey={process.env.REACT_APP_WORKSPACE_KEY || ''}
+      workspaceSecret={process.env.REACT_APP_WORKSPACE_SECRET || ''}
+      subscriberId={process.env.REACT_APP_SUBSCRIBER_ID || ''}
+      distinctId={process.env.REACT_APP_DISTINCT_ID || ''}
     >
-      <button
-        onClick={() => {
-          setPage((prev) => {
-            return prev === 'home' ? 'notifications' : 'home'
-          })
-        }}
-      >
-        Click
-      </button>
-      {page === 'home' ? <Home /> : <Notifications />}
+      <Notifications />
     </SuprSendProvider>
   )
-}
-
-function Home() {
-  useEvent('new_notification', (data) => {
-    console.log('NEW NOTIFICATION EVENT', data)
-  })
-  return <h1>Home</h1>
 }
 
 function Notifications() {
