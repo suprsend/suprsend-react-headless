@@ -9,5 +9,6 @@ export default function useEvent(
 ) {
   useEffect(() => {
     suprSendEmitter.on(eventName, callback)
+    return () => suprSendEmitter.off(eventName)
   }, [])
 }
