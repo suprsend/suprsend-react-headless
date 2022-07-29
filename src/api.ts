@@ -64,6 +64,7 @@ export function markBellClicked() {
     body,
     headers: {
       Authorization: `${workspaceKey}:${signature}`,
+      'Content-Type': 'application/json',
       'x-amz-date': date
     }
   })

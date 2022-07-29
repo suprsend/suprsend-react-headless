@@ -55,7 +55,7 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
       }
       setClientNotificationStorage(storageData)
     } catch (e) {
-      console.log('SUPRSEND: error while getting notifications', e)
+      console.log('SUPRSEND: error getting latest notifications', e)
     }
 
     // polling
@@ -82,7 +82,7 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
         firstFetchedOn: fetchFrom
       }))
     } catch (e) {
-      console.log('SUPRSEND: error while getting notifications', e)
+      console.log('SUPRSEND: error getting previous notifications', e)
     }
   },
 
@@ -98,24 +98,32 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
       (item: IRemoteNotification) => item.n_id === id
     )
     if (clickedNotification && !clickedNotification.seen_on) {
-      markNotificationClicked(id)
-      clickedNotification.seen_on = Date.now()
-      set((store: INotificationStore) => ({ ...store }))
+      try {
+        markNotificationClicked(id)
+        clickedNotification.seen_on = Date.now()
+        set((store: INotificationStore) => ({ ...store }))
 
-      // set in client storage
-      const config = useConfigStore.getState()
-      const storageData: IInternalStorage = {
-        notifications: notifications.slice(0, config.batchSize),
-        subscriberId: config.subscriberId
+        // set in client storage
+        const config = useConfigStore.getState()
+        const storageData: IInternalStorage = {
+          notifications: notifications.slice(0, config.batchSize),
+          subscriberId: config.subscriberId
+        }
+        setClientNotificationStorage(storageData)
+      } catch (e) {
+        console.log('SUPRSEND: error marking notification clicked', e)
       }
-      setClientNotificationStorage(storageData)
     }
   },
 
   markAllSeen: async () => {
-    const res = await markBellClicked()
-    if (!res.ok) return
-    set((store: INotificationStore) => ({ ...store, unSeenCount: 0 }))
+    try {
+      const res = await markBellClicked()
+      if (!res.ok) return
+      set((store: INotificationStore) => ({ ...store, unSeenCount: 0 }))
+    } catch (e) {
+      console.log('SUPRSEND: error marking all notifications seen', e)
+    }
   }
 }))
 
