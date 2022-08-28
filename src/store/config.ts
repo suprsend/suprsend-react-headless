@@ -6,7 +6,8 @@ const useConfigStore = create<IConfigStore>(() => ({
   workspaceSecret: '',
   distinctId: '',
   subscriberId: '',
-  apiUrl: 'https://hub.suprsend.com',
+  collectorApiUrl: 'https://hub.suprsend.com',
+  apiUrl: 'https://inboxs.live',
   pollingInterval: 20 * 1000,
   batchSize: 20,
   batchTimeInterval: 30 * 24 * 60 * 60 * 1000 // in ms

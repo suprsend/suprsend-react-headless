@@ -5,7 +5,7 @@ export function getNotifications(after: number, before?: number) {
   const { apiUrl, workspaceKey, workspaceSecret, subscriberId, distinctId } =
     useConfigStore.getState()
   const date = utcNow()
-  const route = `/inbox/fetch/?subscriber_id=${subscriberId}&after=${after}&distinct_id=${distinctId}`
+  const route = `/fetch/?subscriber_id=${subscriberId}&after=${after}&distinct_id=${distinctId}`
   const fullRoute = before ? `${route}&before=${before}` : route
   const signature = createSignature({
     workspaceSecret,
@@ -23,7 +23,7 @@ export function getNotifications(after: number, before?: number) {
 }
 
 export function markNotificationClicked(id: string) {
-  const { apiUrl, workspaceKey } = useConfigStore.getState()
+  const { collectorApiUrl, workspaceKey } = useConfigStore.getState()
   const body = {
     event: '$notification_clicked',
     env: workspaceKey,
@@ -31,7 +31,7 @@ export function markNotificationClicked(id: string) {
     $time: epochNow(),
     properties: { id }
   }
-  return fetch(`${apiUrl}/event/`, {
+  return fetch(`${collectorApiUrl}/event/`, {
     method: 'POST',
     body: JSON.stringify(body),
     headers: {
@@ -45,7 +45,7 @@ export function markBellClicked() {
   const { apiUrl, workspaceKey, workspaceSecret, subscriberId, distinctId } =
     useConfigStore.getState()
   const date = utcNow()
-  const route = '/inbox/bell-clicked/'
+  const route = '/bell-clicked/'
   const body = JSON.stringify({
     time: epochNow(),
     distinct_id: distinctId,

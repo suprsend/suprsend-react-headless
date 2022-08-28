@@ -10,6 +10,7 @@ export interface IInternalConfig {
   pollingInterval: number
   batchSize: number
   batchTimeInterval: number
+  collectorApiUrl: string
 }
 
 export interface IConfigStore extends IUserConfig, IInternalConfig {}
