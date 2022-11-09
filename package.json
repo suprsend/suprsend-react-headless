@@ -1,6 +1,6 @@
 {
   "name": "@suprsend/react-headless",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "description": "React based headless library for SuprSend",
   "author": "suprsend",
   "license": "MIT",
@@ -36,8 +36,8 @@
     "@types/crypto-js": "^4.1.1",
     "@types/jest": "^25.1.4",
     "@types/node": "^12.12.38",
-    "@types/react": "^16.9.27",
-    "@types/react-dom": "^16.9.7",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.8",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
     "babel-eslint": "^10.0.3",
@@ -56,9 +56,9 @@
     "microbundle-crl": "^0.13.10",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.4",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
     "typescript": "^3.7.5"
   },
   "files": [
