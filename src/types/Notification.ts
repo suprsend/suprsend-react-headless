@@ -3,6 +3,7 @@ interface IRemoteNotificationMessage {
   schema: string
   text: string
   url: string
+  extra_data?: string
 }
 
 export interface IRemoteNotification {
