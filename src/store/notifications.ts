@@ -93,7 +93,8 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
   },
 
   markClicked: (id: string) => {
-    const notifications = get().notifications
+    const thisStore = get()
+    const notifications = thisStore.notifications
     const clickedNotification = notifications.find(
       (item: IRemoteNotification) => item.n_id === id
     )
@@ -101,7 +102,15 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
       try {
         markNotificationClicked(id)
         clickedNotification.seen_on = Date.now()
-        set((store: INotificationStore) => ({ ...store }))
+        const unSeenNotifications = notifications?.filter(
+          (item: IRemoteNotification) => !item.seen_on
+        )
+        set((store: INotificationStore) => ({
+          ...store,
+          unSeenCount: thisStore.unSeenCount
+            ? unSeenNotifications?.length
+            : thisStore.unSeenCount
+        }))
 
         // set in client storage
         const config = useConfigStore.getState()
