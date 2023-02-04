@@ -4,6 +4,7 @@ interface IRemoteNotificationMessage {
   text: string
   url: string
   extra_data?: string
+  actions?: { url: string; name: string }[]
 }
 
 export interface IRemoteNotification {
