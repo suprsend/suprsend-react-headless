@@ -2,15 +2,7 @@
 
 React based headless library for SuprSend
 
-## Install
-
-```bash
-npm install --save @suprsend/react-headless
-```
-
-## Usage
-
-To be Added
+Installation and Initialization steps can be found here: https://docs.suprsend.com/docs/inbox-notifications
 
 ## License
 
