@@ -8,12 +8,14 @@ interface ISuprSendProviderProps {
   distinctId: string
   subscriberId: string
   children: React.ReactElement | React.ReactElement[]
+  pollingInterval?: number
 }
 
 async function handleSubscriberChange(
   workspaceKey: string,
   workspaceSecret: string,
   distinctId: string,
+  pollingInterval: number,
   subscriberId?: string
 ) {
   let storedData = await getClientNotificationStorage(workspaceKey)
@@ -32,11 +34,15 @@ async function handleSubscriberChange(
       firstFetchedOn: null
     }))
   }
+  if (pollingInterval < 7) {
+    pollingInterval = 7
+  }
   useConfigStore.setState(() => ({
     workspaceKey,
     workspaceSecret,
     distinctId,
-    subscriberId
+    subscriberId,
+    pollingInterval: pollingInterval * 1000 || 20 * 1000
   }))
 
   // start polling
@@ -51,13 +57,15 @@ function SuprSendProvider({
   workspaceKey,
   workspaceSecret,
   distinctId,
-  subscriberId
+  subscriberId,
+  pollingInterval = 20
 }: ISuprSendProviderProps): JSX.Element {
   useEffect(() => {
     handleSubscriberChange(
       workspaceKey,
       workspaceSecret,
       distinctId,
+      pollingInterval,
       subscriberId
     )
     return () => {
