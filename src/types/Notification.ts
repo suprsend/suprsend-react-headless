@@ -5,6 +5,8 @@ interface IRemoteNotificationMessage {
   url: string
   extra_data?: string
   actions?: { url: string; name: string }[]
+  avatar?: { avatar_url?: string; action_url?: string }
+  subtext?: { text?: string; action_url?: string }
 }
 
 export interface IRemoteNotification {
