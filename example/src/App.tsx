@@ -3,7 +3,8 @@ import {
   SuprSendProvider,
   useNotifications,
   useNotification,
-  IRemoteNotification
+  IRemoteNotification,
+  useBell
 } from 'suprsend-react-headless'
 
 const App = () => {
@@ -21,10 +22,17 @@ const App = () => {
 
 function Notifications() {
   const { notifications } = useNotifications()
+  const { unSeenCount, markAllSeen } = useBell()
 
   return (
     <div>
-      <h3>Notifications</h3>
+      <h3
+        onClick={() => {
+          markAllSeen()
+        }}
+      >
+        Notifications {unSeenCount}
+      </h3>
       {notifications.map((notification: IRemoteNotification) => {
         return (
           <NotificationItem
