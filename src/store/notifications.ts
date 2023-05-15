@@ -34,9 +34,10 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
       const newNotifications = isFirstCall
         ? [...data.results]
         : [...data.results, ...thisStore.notifications]
+      const newCount = thisStore.unSeenCount + data.unread
       set(() => ({
         notifications: newNotifications,
-        unSeenCount: thisStore.unSeenCount + data.unread,
+        unSeenCount: newCount > config.batchSize ? config.batchSize : newCount,
         lastFetchedOn: currentTimeStamp,
         firstFetchedOn: isFirstCall
           ? prevMonthTimeStamp
