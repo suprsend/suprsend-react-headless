@@ -14,6 +14,7 @@ export interface IRemoteNotification {
   n_category: string
   created_on: number
   seen_on?: number
+  interacted_on?: number
   message: IRemoteNotificationMessage
 }
 
