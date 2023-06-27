@@ -9,6 +9,7 @@ export default function useNotifications() {
     unSeenCount: store.unSeenCount,
     markClicked: store.markClicked,
     markAllSeen: store.markAllSeen,
-    fetchPrevious: store.fetchPrevious
+    fetchPrevious: store.fetchPrevious,
+    markAllRead: store.markAllRead
   }
 }

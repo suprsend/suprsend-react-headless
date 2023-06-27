@@ -11,4 +11,5 @@ export default interface INotificationStore {
   markClicked: (id: string) => void
   markAllSeen: () => void
   clearPolling: () => void
+  markAllRead: () => void
 }

@@ -4,7 +4,8 @@ import { INotificationStore, IRemoteNotification } from '../types'
 import {
   getNotifications,
   markNotificationClicked,
-  markBellClicked
+  markBellClicked,
+  markAllRead
 } from '../api'
 import { setClientNotificationStorage } from '../utils'
 import { suprSendEmitter } from '../main/useEvent'
@@ -98,10 +99,11 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
     const clickedNotification = notifications.find(
       (item: IRemoteNotification) => item.n_id === id
     )
-    if (clickedNotification && !clickedNotification.seen_on) {
+    if (clickedNotification && !clickedNotification.interacted_on) {
       try {
         markNotificationClicked(id)
         clickedNotification.seen_on = Date.now()
+        clickedNotification.interacted_on = Date.now()
         set((store: INotificationStore) => ({ ...store }))
 
         // set in client storage
@@ -124,6 +126,32 @@ const useNotificationStore = create<INotificationStore>()((set, get) => ({
       set((store: INotificationStore) => ({ ...store, unSeenCount: 0 }))
     } catch (e) {
       console.log('SUPRSEND: error marking all notifications seen', e)
+    }
+  },
+
+  markAllRead: async () => {
+    const notifications = get().notifications
+    try {
+      if (notifications?.length <= 0) {
+        return
+      }
+      markAllRead()
+      notifications.forEach((notification: IRemoteNotification) => {
+        if (!notification.seen_on) {
+          notification.seen_on = Date.now()
+        }
+      })
+      set((store: INotificationStore) => ({ ...store, notifications }))
+
+      // set in client storage
+      const config = useConfigStore.getState()
+      const storageData: IInternalStorage = {
+        notifications: get().notifications.slice(0, config.batchSize),
+        subscriberId: config.subscriberId
+      }
+      setClientNotificationStorage(storageData)
+    } catch (e) {
+      console.log('SUPRSEND: error marking all notifications read', e)
     }
   }
 }))

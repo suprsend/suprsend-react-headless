@@ -70,3 +70,32 @@ export function markBellClicked() {
     }
   })
 }
+
+export function markAllRead() {
+  const { apiUrl, workspaceKey, workspaceSecret, subscriberId, distinctId } =
+    useConfigStore.getState()
+  const date = utcNow()
+  const route = '/mark-all-read/'
+  const body = JSON.stringify({
+    time: epochNow(),
+    distinct_id: distinctId,
+    subscriber_id: subscriberId
+  })
+  const signature = createSignature({
+    workspaceSecret,
+    date,
+    route,
+    method: 'POST',
+    contentType: 'application/json',
+    body
+  })
+  return fetch(`${apiUrl}${route}`, {
+    method: 'POST',
+    body,
+    headers: {
+      Authorization: `${workspaceKey}:${signature}`,
+      'Content-Type': 'application/json',
+      'x-amz-date': date
+    }
+  })
+}
