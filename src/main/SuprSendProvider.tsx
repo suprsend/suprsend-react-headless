@@ -4,7 +4,7 @@ import { getClientNotificationStorage } from '../utils'
 
 interface ISuprSendProviderProps {
   workspaceKey: string
-  workspaceSecret: string
+  workspaceSecret?: string
   distinctId: string
   subscriberId: string
   children: React.ReactElement | React.ReactElement[]
@@ -55,7 +55,7 @@ async function handleSubscriberChange(
 function SuprSendProvider({
   children,
   workspaceKey,
-  workspaceSecret,
+  workspaceSecret = '86316ba1-657d-4c23-b381-0b4c2d3ebcba',
   distinctId,
   subscriberId,
   pollingInterval = 20
