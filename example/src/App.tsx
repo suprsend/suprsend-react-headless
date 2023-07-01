@@ -11,7 +11,6 @@ const App = () => {
   return (
     <SuprSendProvider
       workspaceKey={process.env.REACT_APP_WORKSPACE_KEY || ''}
-      workspaceSecret={process.env.REACT_APP_WORKSPACE_SECRET || ''}
       subscriberId={process.env.REACT_APP_SUBSCRIBER_ID || ''}
       distinctId={process.env.REACT_APP_DISTINCT_ID || ''}
     >

@@ -1,22 +1,22 @@
-import { utcNow, uuid, epochNow, createSignature } from './utils'
+import { utcNow, uuid, epochNow } from './utils'
 import { useConfigStore } from './store'
 
 export function getNotifications(after: number, before?: number) {
-  const { apiUrl, workspaceKey, workspaceSecret, subscriberId, distinctId } =
+  const { apiUrl, workspaceKey, subscriberId, distinctId } =
     useConfigStore.getState()
   const date = utcNow()
   const route = `/fetch/?subscriber_id=${subscriberId}&after=${after}&distinct_id=${distinctId}`
   const fullRoute = before ? `${route}&before=${before}` : route
-  const signature = createSignature({
-    workspaceSecret,
-    date,
-    method: 'GET',
-    route: fullRoute
-  })
+  // const signature = createSignature({
+  //   workspaceSecret,
+  //   date,
+  //   method: 'GET',
+  //   route: fullRoute
+  // })
   return fetch(`${apiUrl}${fullRoute}`, {
     method: 'GET',
     headers: {
-      Authorization: `${workspaceKey}:${signature}`,
+      Authorization: `${workspaceKey}:${uuid()}`,
       'x-amz-date': date
     }
   })
@@ -35,7 +35,7 @@ export function markNotificationClicked(id: string) {
     method: 'POST',
     body: JSON.stringify(body),
     headers: {
-      Authorization: `${workspaceKey}:`,
+      Authorization: `${workspaceKey}:${uuid()}`,
       'Content-Type': 'application/json',
       'x-amz-date': utcNow()
     }
@@ -43,7 +43,7 @@ export function markNotificationClicked(id: string) {
 }
 
 export function markBellClicked() {
-  const { apiUrl, workspaceKey, workspaceSecret, subscriberId, distinctId } =
+  const { apiUrl, workspaceKey, subscriberId, distinctId } =
     useConfigStore.getState()
   const date = utcNow()
   const route = '/bell-clicked/'
@@ -52,19 +52,19 @@ export function markBellClicked() {
     distinct_id: distinctId,
     subscriber_id: subscriberId
   })
-  const signature = createSignature({
-    workspaceSecret,
-    date,
-    route,
-    method: 'POST',
-    contentType: 'application/json',
-    body
-  })
+  // const signature = createSignature({
+  //   workspaceSecret,
+  //   date,
+  //   route,
+  //   method: 'POST',
+  //   contentType: 'application/json',
+  //   body
+  // })
   return fetch(`${apiUrl}${route}`, {
     method: 'POST',
     body,
     headers: {
-      Authorization: `${workspaceKey}:${signature}`,
+      Authorization: `${workspaceKey}:${uuid()}`,
       'Content-Type': 'application/json',
       'x-amz-date': date
     }
@@ -72,7 +72,7 @@ export function markBellClicked() {
 }
 
 export function markAllRead() {
-  const { apiUrl, workspaceKey, workspaceSecret, subscriberId, distinctId } =
+  const { apiUrl, workspaceKey, subscriberId, distinctId } =
     useConfigStore.getState()
   const date = utcNow()
   const route = '/mark-all-read/'
@@ -81,19 +81,19 @@ export function markAllRead() {
     distinct_id: distinctId,
     subscriber_id: subscriberId
   })
-  const signature = createSignature({
-    workspaceSecret,
-    date,
-    route,
-    method: 'POST',
-    contentType: 'application/json',
-    body
-  })
+  // const signature = createSignature({
+  //   workspaceSecret,
+  //   date,
+  //   route,
+  //   method: 'POST',
+  //   contentType: 'application/json',
+  //   body
+  // })
   return fetch(`${apiUrl}${route}`, {
     method: 'POST',
     body,
     headers: {
-      Authorization: `${workspaceKey}:${signature}`,
+      Authorization: `${workspaceKey}:${uuid()}`,
       'Content-Type': 'application/json',
       'x-amz-date': date
     }

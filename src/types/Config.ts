@@ -1,6 +1,6 @@
 export interface IUserConfig {
   workspaceKey: string
-  workspaceSecret: string
+  workspaceSecret?: string
   distinctId: string
   subscriberId: string
 }
