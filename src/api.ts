@@ -16,7 +16,7 @@ export function getNotifications(after: number, before?: number) {
   return fetch(`${apiUrl}${fullRoute}`, {
     method: 'GET',
     headers: {
-      Authorization: `${workspaceKey}:`,
+      Authorization: `${workspaceKey}:${uuid()}`,
       'x-amz-date': date
     }
   })
@@ -35,7 +35,7 @@ export function markNotificationClicked(id: string) {
     method: 'POST',
     body: JSON.stringify(body),
     headers: {
-      Authorization: `${workspaceKey}:`,
+      Authorization: `${workspaceKey}:${uuid()}`,
       'Content-Type': 'application/json',
       'x-amz-date': utcNow()
     }
@@ -64,7 +64,7 @@ export function markBellClicked() {
     method: 'POST',
     body,
     headers: {
-      Authorization: `${workspaceKey}:`,
+      Authorization: `${workspaceKey}:${uuid()}`,
       'Content-Type': 'application/json',
       'x-amz-date': date
     }
@@ -93,7 +93,7 @@ export function markAllRead() {
     method: 'POST',
     body,
     headers: {
-      Authorization: `${workspaceKey}:`,
+      Authorization: `${workspaceKey}:${uuid()}`,
       'Content-Type': 'application/json',
       'x-amz-date': date
     }
