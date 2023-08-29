@@ -5,18 +5,20 @@ export function getNotifications(after: number, before?: number) {
   const { apiUrl, workspaceKey, subscriberId, distinctId } =
     useConfigStore.getState()
   const date = utcNow()
-  const route = `/fetch/?subscriber_id=${subscriberId}&after=${after}&distinct_id=${distinctId}`
-  const fullRoute = before ? `${route}&before=${before}` : route
+  const route = `/fetch-notifications/?subscriber_id=${subscriberId}&distinct_id=${distinctId}`
   // const signature = createSignature({
   //   workspaceSecret,
   //   date,
   //   method: 'GET',
   //   route: fullRoute
   // })
-  return fetch(`${apiUrl}${fullRoute}`, {
+  return fetch(`${apiUrl}${route}`, {
     method: 'GET',
-    headers: {
+    headers: <any>{
       Authorization: `${workspaceKey}:${uuid()}`,
+      'ss-referer': 'react-headless',
+      'ss-after': after,
+      'ss-before': before || 0,
       'x-amz-date': date
     }
   })
