@@ -1,6 +1,6 @@
 {
   "name": "@suprsend/react-headless",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "React based headless library for SuprSend",
   "author": "suprsend",
   "license": "MIT",
